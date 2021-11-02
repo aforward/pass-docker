@@ -70,7 +70,9 @@
         <Errors supportContact="admin@pass"
             helpLocation="/about.html"
             styleSheet="/shibboleth-sp/main.css"/>
-        
+
+        <RelyingParty Name="https://pass.local/idp/shibboleth" sessionHook="/app/moo"/>
+
         <!-- Example of remotely supplied batch of signed metadata. -->
         <!--
         <MetadataProvider type="XML" validate="true"
