@@ -81,7 +81,7 @@ services:
 
   proxy:
     build: ./httpd-proxy/
-    image: oapass/httpd-proxy:20211101
+    image: oapass/httpd-proxy:401
     container_name: proxy
     networks:
      - front
