@@ -71,7 +71,7 @@
             helpLocation="/about.html"
             styleSheet="/shibboleth-sp/main.css"/>
 
-        <RelyingParty Name="https://pass.local/idp/shibboleth" sessionHook="/app/moo"/>
+        <RelyingParty Name="https://pass.local/idp/shibboleth" sessionHook="http://localhost:4200/"/>
 
         <!-- Example of remotely supplied batch of signed metadata. -->
         <!--
