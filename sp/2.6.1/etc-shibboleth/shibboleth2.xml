@@ -43,7 +43,7 @@
             (Set discoveryProtocol to "WAYF" for legacy Shibboleth WAYF support.)
             You can also override entityID on /Login query string, or in RequestMap/htaccess.
             -->
-            <SSO entityID="https://pass.local/idp/shibboleth">
+            <SSO entityID="https://pass.local/idp/shibboleth" >
               SAML2 SAML1
             </SSO>
 
@@ -71,7 +71,7 @@
             helpLocation="/about.html"
             styleSheet="/shibboleth-sp/main.css"/>
 
-        <RelyingParty Name="https://pass.local/idp/shibboleth" sessionHook="http://localhost:4200/"/>
+        <RelyingParty Name="https://pass.local/idp/shibboleth" />
 
         <!-- Example of remotely supplied batch of signed metadata. -->
         <!--

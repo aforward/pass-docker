@@ -34,23 +34,23 @@ services:
       - front
       - back
 
-  ember:
-    build:
-      context: ./ember
-      args:
-        EMBER_GIT_REPO: "${EMBER_GIT_REPO}"
-        EMBER_GIT_BRANCH: "${EMBER_GIT_BRANCH}"
-        POLICY_SERVICE_URL: "${POLICY_SERVICE_URL}"
-        USER_SERVICE_URL: "${USER_SERVICE_URL}"
-        DOI_SERVICE_URL: "${DOI_SERVICE_URL}"
-        METADATA_SCHEMA_URI: "${METADATA_SCHEMA_URI}"
-        MANUSCRIPT_SERVICE_LOOKUP_URL: "${MANUSCRIPT_SERVICE_LOOKUP_URL}"
-        MANUSCRIPT_SERVICE_DOWNLOAD_URL: "${MANUSCRIPT_SERVICE_DOWNLOAD_URL}"
-    image: oapass/ember:20200820-bfaeb5af@sha256:30078e3face08f324c8b2f1dbf93c02789bc8c3665d1269fc3a7586fb214d238
-    container_name: ember
-    env_file: .env
-    networks:
-      - back
+  # ember:
+  #   build:
+  #     context: ./ember
+  #     args:
+  #       EMBER_GIT_REPO: "${EMBER_GIT_REPO}"
+  #       EMBER_GIT_BRANCH: "${EMBER_GIT_BRANCH}"
+  #       POLICY_SERVICE_URL: "${POLICY_SERVICE_URL}"
+  #       USER_SERVICE_URL: "${USER_SERVICE_URL}"
+  #       DOI_SERVICE_URL: "${DOI_SERVICE_URL}"
+  #       METADATA_SCHEMA_URI: "${METADATA_SCHEMA_URI}"
+  #       MANUSCRIPT_SERVICE_LOOKUP_URL: "${MANUSCRIPT_SERVICE_LOOKUP_URL}"
+  #       MANUSCRIPT_SERVICE_DOWNLOAD_URL: "${MANUSCRIPT_SERVICE_DOWNLOAD_URL}"
+  #   image: oapass/ember:20200820-bfaeb5af@sha256:30078e3face08f324c8b2f1dbf93c02789bc8c3665d1269fc3a7586fb214d238
+  #   container_name: ember
+  #   env_file: .env
+  #   networks:
+  #     - back
 
   static-html:
     build:
@@ -95,7 +95,7 @@ services:
       context: ./idp
       args:
         TENANT: jhu
-    image: oapass/idp:20190813-jhu@sha256:f7a37180964e0e90e1db15440846a39c39659f20999a11c556b99f43d65c7fcb
+    image: oapass/idp:moop
     container_name: idp
     depends_on:
      - ldap
@@ -132,6 +132,8 @@ services:
      - back
     secrets:
      - source: sp_key
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   dspace:
     build: ./dspace/6.2
