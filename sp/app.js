@@ -11,8 +11,6 @@ const ensureAuthenticated = require('./middleware/ensure-auth');
 var env = process.env.NODE_ENV || "development";
 const config = require("./config/config")[env];
 
-console.log("Using configuration :", config);
-
 require("./config/passport")(passport, config);
 
 var app = express();
@@ -47,29 +45,7 @@ app.use(passport.session());
 
 app.use(express.static(path.join(__dirname, "public")));
 
-console.log(config)
 require("./config/routes")(app, config, passport);
-
-apiProxy.on('proxyReq', function(proxyReq, req, res, options) {
-  const user = req.user;
-
-  proxyReq.setHeader('DISPLAY_NAME_HEADER', user.displayName);
-  proxyReq.setHeader('EMAIL_HEADER', user.email);
-  proxyReq.setHeader('EPPN_HEADER', user.eppn);
-  proxyReq.setHeader('GIVENNAME_HEADER', user.givenName);
-  proxyReq.setHeader('SN_HEADER', user.surname);
-  proxyReq.setHeader('SCOPED_AFFILIATION_HEADER', user.scopedAffiliation);
-  proxyReq.setHeader('EMPLOYEE_ID_HEADER', user.employeeNumber);
-  proxyReq.setHeader('HOPKINS_ID_HEADER', user.uniqueId);
-  proxyReq.setHeader('EMPLOYEE_ID_TYPE', user.employeeIdType);
-  proxyReq.setHeader('HOPKINS_ID_TYPE', user.uniqueIdType);
-  proxyReq.setHeader('JHED_ID_TYPE', user.jhedIdType);
-});
-
-// /pass-user-service/whoami
-// app.all("/pass-user-service/whoami", ensureAuthenticated, function(req, res) {
-//   apiProxy.web(req, res, {target: userService});
-// });
 
 app.all("/fcrepo/*", ensureAuthenticated, function(req, res) {
   apiProxy.web(req, res, {target: fcrepo});
@@ -89,10 +65,6 @@ app.all("/pass-user-service/*", ensureAuthenticated, function(req, res) {
   req.headers['EMPLOYEE_ID_TYPE'] = user.employeeIdType;
   req.headers['HOPKINS_ID_TYPE'] = user.uniqueIdType;
   req.headers['JHED_ID_TYPE'] = user.jhedIdType;
-
-  console.log('🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥')
-  console.log(req.headers)
-  console.log('🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥')
 
   apiProxy.web(req, res, {target: userService});
 });
