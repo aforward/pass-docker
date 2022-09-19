@@ -1,0 +1,16 @@
+extends layout
+
+block content
+	h1 Profile
+
+	dl
+		dt Display name
+		dd #{user.displayName}
+		dt Email
+		dd #{user.email}
+
+	ul
+	each val, index in user
+		li= index + ': ' + val
+
+	a(href="/logout") Logout
