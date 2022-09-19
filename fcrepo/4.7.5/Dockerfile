@@ -58,6 +58,7 @@ COPY bin/* /bin/
 COPY conf/ ${CATALINA_HOME}/conf
 COPY lib/* ${CATALINA_HOME}/lib/
 COPY tomcat-bin/* ${CATALINA_HOME}/bin/
+COPY ./pass-user-service-0.2.0-SNAPSHOT.war ${CATALINA_HOME}/webapps/pass-user-service.war 
 
 RUN apk update && \
     apk add --no-cache ca-certificates wget gettext curl python py-pip && \
@@ -81,10 +82,10 @@ RUN apk update && \
             https://repo1.maven.org/maven2/org/eclipse/pass/pass-authz-roles/${PASS_AUTHZ_VERSION}/pass-authz-roles-${PASS_AUTHZ_VERSION}.jar && \
     echo "6c00bfa24c3f9ba29277da45961c044928e0c957 *${CATALINA_HOME}/lib/pass-authz-roles-${PASS_AUTHZ_VERSION}.jar" \
         | sha1sum -c -  && \
-    wget -O ${CATALINA_HOME}/webapps/pass-user-service.war \
-        https://repo1.maven.org/maven2/org/eclipse/pass/pass-user-service/${PASS_AUTHZ_VERSION}/pass-user-service-${PASS_AUTHZ_VERSION}.war && \
-    echo "0f7138d13aeb5f53a9bda264dd68b9448314f01d *${CATALINA_HOME}/webapps/pass-user-service.war" \
-        | sha1sum -c -  && \
+    # wget -O ${CATALINA_HOME}/webapps/pass-user-service.war \
+    #     https://repo1.maven.org/maven2/org/eclipse/pass/pass-user-service/${PASS_AUTHZ_VERSION}/pass-user-service-${PASS_AUTHZ_VERSION}.war && \
+    # echo "0f7138d13aeb5f53a9bda264dd68b9448314f01d *${CATALINA_HOME}/webapps/pass-user-service.war" \
+        # | sha1sum -c -  && \
     mkdir ${CATALINA_HOME}/webapps/pass-user-service && \
     unzip ${CATALINA_HOME}/webapps/pass-user-service.war -d ${CATALINA_HOME}/webapps/pass-user-service  && \
     rm ${CATALINA_HOME}/webapps/pass-user-service.war && \

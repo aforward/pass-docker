@@ -5,7 +5,7 @@ services:
   fcrepo:
     build:
       context: ./fcrepo/4.7.5
-    image: oapass/fcrepo:0.1.0@sha256:56730754843aec0a3d48bfcefd13d72f1bb34708aea9b47d2280d2da61a1eb54
+    image: oapass/fcrepo:mooz
     container_name: fcrepo
     env_file: .env
     ports:
@@ -58,7 +58,7 @@ services:
       args:
         STATIC_HTML_GIT_REPO: "${STATIC_HTML_GIT_REPO}"
         STATIC_HTML_GIT_BRANCH: "${STATIC_HTML_GIT_BRANCH}"
-    image: oapass/static-html:0.1.0@sha256:196a14bce65963e2d3903a6e14c4088b51b5744bbaf89c6cbc201667fdccb658
+    image: mooz
     container_name: static-html
     env_file: .env
     ports:
@@ -81,7 +81,7 @@ services:
 
   proxy:
     build: ./httpd-proxy/
-    image: oapass/httpd-proxy:0.1.0@sha256:ef5fa38fdf4ba14ed4edd27282d95377946eb25abde3fc97dc817324d200f5a8
+    image: proxymoo
     container_name: proxy
     networks:
      - front
@@ -95,7 +95,7 @@ services:
       context: ./idp
       args:
         TENANT: jhu
-    image: oapass/idp:0.1.0@sha256:6028785e1f6b4e35f7d21f9fd4fd11127d628a1e3aef54665a3d53145045d065
+    image: mooidp
     container_name: idp
     depends_on:
      - ldap
@@ -125,8 +125,8 @@ services:
      - back
 
   sp:
-    build: ./sp/2.6.1
-    image: oapass/sp:0.1.0@sha256:3fbdc2d8e7d5e42eda947ead953b78934d7621441a10533261d11b49eea144d7
+    build: ./sp/
+    image: moo
     container_name: sp
     networks:
      - back
