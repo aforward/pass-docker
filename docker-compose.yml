@@ -95,7 +95,7 @@ services:
       context: ./idp
       args:
         TENANT: jhu
-    image: mooidp
+    image: oapass/idp:0.1.0@sha256:6028785e1f6b4e35f7d21f9fd4fd11127d628a1e3aef54665a3d53145045d065
     container_name: idp
     depends_on:
      - ldap
