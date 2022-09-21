@@ -81,7 +81,7 @@ services:
 
   proxy:
     build: ./httpd-proxy/
-    image: oapass/httpd-proxy:0.1.0@sha256:ef5fa38fdf4ba14ed4edd27282d95377946eb25abde3fc97dc817324d200f5a8
+    image: myproxymoo
     container_name: proxy
     networks:
      - front
@@ -125,8 +125,8 @@ services:
      - back
 
   sp:
-    build: ./sp/2.6.1
-    image: oapass/sp:0.1.0@sha256:3fbdc2d8e7d5e42eda947ead953b78934d7621441a10533261d11b49eea144d7
+    build: ./sp
+    image: yepyep
     container_name: sp
     networks:
      - back

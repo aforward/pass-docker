@@ -9,7 +9,7 @@ module.exports = {
     passport: {
       strategy: process.env.PASSPORT_STRATEGY || "saml",
       saml: {
-        path: "/auth/Shibboleth.sso/SAML2/POST",
+        path: "/Shibboleth.sso/SAML2/POST",
         identifierFormat: process.env.IDENTIFIER_FORMAT || "",
         entryPoint:
           process.env.SAML_ENTRY_POINT ||
