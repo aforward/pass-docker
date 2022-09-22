@@ -63,6 +63,19 @@ apiProxy.on('proxyReq', function(proxyReq, req, _res, _options) {
   proxyReq.setHeader('Employeenumber', user.employeeNumber);
   proxyReq.setHeader('unique-id', user.uniqueId);
   proxyReq.setHeader('employeeid', user.employeeIdType);
+
+  // this is necessary because the bodyParser middleware and http-proxy
+  // do not play well together with POST requests
+  // https://github.com/http-party/node-http-proxy/issues/180
+  if (req.body) {
+    let bodyData = JSON.stringify(req.body);
+    // incase if content-type is application/x-www-form-urlencoded -> we need to change to application/json
+    proxyReq.setHeader('Content-Type','application/json');
+    proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+    // stream the content
+    console.log(bodyData);
+    proxyReq.write(bodyData);
+  }
 });
 
 app.all("/fcrepo/*", ensureAuthenticated, function(req, res) {
@@ -82,6 +95,11 @@ app.all("/app/*", ensureAuthenticated, function(req, res) {
 });
 
 app.all("/es/*", ensureAuthenticated, function(req, res) {
+  // this is necessary because the proxy server by default will
+  // append the route to the target and that results in an invalid
+  // path for elastic search
+  req.url = '';
+
   apiProxy.web(req, res, {target: elasticSearch});
 });
 
