@@ -17,12 +17,14 @@ require("./config/passport")(passport, config);
 
 var app = express();
 
+app.set('trust proxy', 1); // trust first proxy
+
 // create a proxy server for each of the pass services
 const apiProxy = httpProxy.createProxyServer();
-const fcrepo = 'http://fcrepo:8080/fcrepo',
+const fcrepo = 'http://fcrepo:8080/',
       userService = 'http://fcrepo:8080/',
       ember = 'http://ember:81/',
-      elasticSearch = 'http://elasticsearch:9200/',
+      elasticSearch = 'http://elasticsearch:9200/pass/_search',
       schemaService = 'http://schemaservice:8086',
       policyService = 'http://policyservice:8088',
       doiService = 'http://doiservice:8080/',
@@ -49,25 +51,29 @@ app.use(express.static(path.join(__dirname, "public")));
 
 require("./config/routes")(app, config, passport);
 
+apiProxy.on('proxyReq', function(proxyReq, req, _res, _options) {
+  const user = req.user;
+
+  proxyReq.setHeader('Displayname', user.displayName);
+  proxyReq.setHeader('Mail', user.email);
+  proxyReq.setHeader('Eppn', user.eppn);
+  proxyReq.setHeader('Givenname', user.givenName);
+  proxyReq.setHeader('Sn', user.surname);
+  proxyReq.setHeader('Affiliation', user.scopedAffiliation);
+  proxyReq.setHeader('Employeenumber', user.employeeNumber);
+  proxyReq.setHeader('unique-id', user.uniqueId);
+  proxyReq.setHeader('employeeid', user.employeeIdType);
+});
+
 app.all("/fcrepo/*", ensureAuthenticated, function(req, res) {
+  const base64Creds = Buffer.from(`${process.env.PASS_FEDORA_USER}:${process.env.PASS_FEDORA_PASSWORD}`).toString('base64')
+
+  req.headers['Authorization'] = `Basic ${base64Creds}`;
+
   apiProxy.web(req, res, {target: fcrepo});
 });
 
 app.all("/pass-user-service/*", ensureAuthenticated, function(req, res) {
-  const user = req.user;
-
-  req.headers['DISPLAY_NAME_HEADER'] = user.displayName;
-  req.headers['EMAIL_HEADER'] = user.email;
-  req.headers['EPPN_HEADER'] = user.eppn;
-  req.headers['GIVENNAME_HEADER'] = user.givenName;
-  req.headers['SN_HEADER'] = user.surname;
-  req.headers['SCOPED_AFFILIATION_HEADER'] = user.scopedAffiliation;
-  req.headers['EMPLOYEE_ID_HEADER'] = user.employeeNumber;
-  req.headers['HOPKINS_ID_HEADER'] = user.uniqueId;
-  req.headers['EMPLOYEE_ID_TYPE'] = user.employeeIdType;
-  req.headers['HOPKINS_ID_TYPE'] = user.uniqueIdType;
-  req.headers['JHED_ID_TYPE'] = user.jhedIdType;
-
   apiProxy.web(req, res, {target: userService});
 });
 
@@ -75,7 +81,7 @@ app.all("/app/*", ensureAuthenticated, function(req, res) {
   apiProxy.web(req, res, {target: ember});
 });
 
-app.all("/pass/_search/*", ensureAuthenticated, function(req, res) {
+app.all("/es/*", ensureAuthenticated, function(req, res) {
   apiProxy.web(req, res, {target: elasticSearch});
 });
 

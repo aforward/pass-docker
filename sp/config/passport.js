@@ -9,7 +9,6 @@ module.exports = function(passport, config) {
     done(null, user);
   });
 
-
   // Attributes sent from the pass-docker idp (these may OR may not be the same
   // attributes sent by the actual JHU idp):
   ///  attributes: {
@@ -52,13 +51,6 @@ module.exports = function(passport, config) {
     'urn:oid:0.9.2342.19200300.100.1.1': 'uniqueIdType',
   };
 
-  function verifyProfile(profile, done) {
-    if (!profile) {
-        return done(new Error('Empty SAML profile returned!'));
-    }
-    return done(null, convertProfileToUser(profile));
-  }
-
   function convertProfileToUser(profile) {
     let user = {};
     let niceName;
@@ -73,8 +65,6 @@ module.exports = function(passport, config) {
             user[niceName] = profile[key];
         }
     }
-
-    user.jhedIdType = 'eppn';
 
     return user;
   }
@@ -92,12 +82,12 @@ module.exports = function(passport, config) {
     },
     function(profile, done) {
       console.log("This is what is returned by Saml", profile);
+
+      if (!profile) {
+        return done(new Error('Empty SAML profile returned!'));
+      }
       
       const user = convertProfileToUser(profile);
-
-      console.log('🐹🐹🐹🐹🐹🐹🐹🐹🐹🐹🐹🐹🐹🐹🐹🐹🐹🐹🐹🐹🐹🐹🐹🐹🐹')
-      console.log(user);
-      console.log('🐹🐹🐹🐹🐹🐹🐹🐹🐹🐹🐹🐹🐹🐹🐹🐹🐹🐹🐹🐹🐹🐹🐹🐹🐹')
 
       return done(null, user);
     }
