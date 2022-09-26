@@ -79,10 +79,9 @@ module.exports = function(passport, config) {
       cert: config.passport.saml.cert,
       decryptionPvk: config.passport.saml.decryptionPvk,
       identifierFormat: config.passport.saml.identifierFormat,
+      forceAuthn: config.passport.saml.forceAuthn,
     },
     function(profile, done) {
-      console.log("This is what is returned by Saml", profile);
-
       if (!profile) {
         return done(new Error('Empty SAML profile returned!'));
       }
